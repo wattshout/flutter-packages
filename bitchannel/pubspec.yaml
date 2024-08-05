@@ -1,8 +1,10 @@
 name: bitchannel
-description: Event support package.
-version: 0.0.1
-repository: https://github.com/wattshout/flutter-packages/tree/main/packages/bit
-issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22bit%20package%22
+description: >
+  A mix between an event-oriented package and a communication infrastructure 
+  package based on channels and bits of information.
+version: 1.0.1
+repository: https://github.com/wattshout/flutter-packages/tree/main/bitchannel
+issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22bitchannel%20package%22
 homepage: https://wattshout.com
 
 environment:
@@ -30,3 +32,5 @@ platforms:
 
 topics:
   - event
+  - communication
+  - infrastructure

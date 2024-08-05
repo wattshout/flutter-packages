@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'helper_bits.dart';
 
+// ██       ██████   ██████      ██      ███████ ██    ██ ███████ ██
+// ██      ██    ██ ██           ██      ██      ██    ██ ██      ██
+// ██      ██    ██ ██   ███     ██      █████   ██    ██ █████   ██
+// ██      ██    ██ ██    ██     ██      ██       ██  ██  ██      ██
+// ███████  ██████   ██████      ███████ ███████   ████   ███████ ███████
+
+/// Defines the log levels for bit operations.
 enum LogLevel {
   user,
   info,
@@ -16,11 +23,13 @@ enum LogLevel {
 // ██   ██ ██    ██
 // ██████  ██    ██
 
+/// Abstract base class representing a bit of information.
 abstract base class Bit extends ReceivableBit {
   Bit() {
     BitChannel.join(bitChannel, from: this);
   }
 
+  /// The channel this bit belongs to.
   String get bitChannel;
 
   @override
@@ -38,7 +47,10 @@ abstract base class Bit extends ReceivableBit {
   @override
   String get qualifier => "New Bit $runtimeType";
 
+  /// Log level for bits.
   static LogLevel logLevel = LogLevel.info;
+
+  /// Global data shared accross all bits.
   static final Map<String, dynamic> globals = {};
 }
 
@@ -48,27 +60,29 @@ abstract base class Bit extends ReceivableBit {
 // ██   ██ ██    ██        ██      ██   ██ ██   ██ ██  ██ ██ ██  ██ ██ ██      ██
 // ██████  ██    ██         ██████ ██   ██ ██   ██ ██   ████ ██   ████ ███████ ███████
 
+/// Represents a communication channel for bits.
 final class BitChannel extends ReceivableBit {
   BitChannel._(this._name);
 
   final String _name;
 
-  final List<BitReceiver> _list = [];
+  final List<_BitReceiver> _list = [];
 
   @override
   String get qualifier => "New BitChannel #$_name";
 
+  /// Joins a channel.
   static join(String channel, {required Core from}) {
     if (!_map.containsKey(channel)) _map[channel] = BitChannel._(channel);
     final bitChannel = _map[channel]!;
 
     switch (from) {
       case Bit bit:
-        for (final BitReceiver r in List.unmodifiable(bitChannel._list)) {
+        for (final _BitReceiver r in List.unmodifiable(bitChannel._list)) {
           r._onBit(bit);
         }
 
-      case BitReceiver _:
+      case _BitReceiver _:
         if (bitChannel._list.contains(from)) {
           throw Exception("${from.runtimeType} has joined #$channel already");
         }
@@ -80,6 +94,7 @@ final class BitChannel extends ReceivableBit {
     return bitChannel;
   }
 
+  /// Leaves a channel.
   static leave(String channel, {required Core from}) {
     final bitChannel = _map[channel]!;
     if (!bitChannel._list.contains(from)) {
@@ -88,15 +103,6 @@ final class BitChannel extends ReceivableBit {
     bitChannel._list.remove(from);
     Log("${from.runtimeType} has left #${bitChannel._name}");
   }
-  // static leave({required Core from}) {
-  //   final BitChannel bitChannel =
-  //       _map.values.singleWhere((e) => e._list.contains(from));
-  //   if (!bitChannel._list.contains(from)) {
-  //     throw Exception("${from.runtimeType} has left #${bitChannel._name}");
-  //   }
-  //   bitChannel._list.remove(from);
-  //   Log("${from.runtimeType} has left #${bitChannel._name}");
-  // }
 
   static final Map<String, BitChannel> _map = {};
 }
@@ -107,26 +113,25 @@ final class BitChannel extends ReceivableBit {
 // ██   ██ ██    ██        ██   ██ ██      ██      ██      ██  ██  ██  ██      ██   ██
 // ██████  ██    ██        ██   ██ ███████  ██████ ███████ ██   ████   ███████ ██   ██
 
-mixin BitReceiver implements Core {
+/// Mixin for receiving bits.
+mixin _BitReceiver implements Core {
+  /// Map of bit types to their handlers.
   Map<Type, Function(Bit bit)> get bitMap;
 
+  /// Handles received bits.
   _onBit(Bit bit);
 
   @override
   String get qualifier => "New BitReceiver $runtimeType";
 
-  static _onBitBuilder(BitReceiver r) => (Bit bit) {
+  static _onBitBuilder(_BitReceiver r) => (Bit bit) {
         if (!r.bitMap.containsKey(bit.runtimeType)) {
-          // Dev("Receiver doesn't handle bit", data: {
-          //   "receiver": r.runtimeType,
-          //   "bit": bit._toJson(),
-          // });
           return;
         }
         r.bitMap[bit.runtimeType]!(bit);
       };
 
-  static _toJsonBuilder(BitReceiver r) => ([bool ignoreLogLevel = false]) => {
+  static _toJsonBuilder(_BitReceiver r) => ([bool ignoreLogLevel = false]) => {
         "qualifier": r.qualifier,
         // LogLevel.info
         if (ignoreLogLevel ||
@@ -148,27 +153,29 @@ mixin BitReceiver implements Core {
       };
 }
 
-mixin BitService implements BitReceiver {
+/// Mixin for services that receive bits.
+mixin BitService implements _BitReceiver {
   @override
-  _onBit(Bit bit) => BitReceiver._onBitBuilder(this)(bit);
+  _onBit(Bit bit) => _BitReceiver._onBitBuilder(this)(bit);
 
   @override
   Map<String, dynamic> _toJson([bool ignoreLogLevel = false]) =>
-      BitReceiver._toJsonBuilder(this)(ignoreLogLevel);
+      _BitReceiver._toJsonBuilder(this)(ignoreLogLevel);
 
   @override
   String get qualifier => "New BitService $runtimeType";
 }
 
-mixin BitState<T extends StatefulWidget> on State<T> implements BitReceiver {
-  get bitChannel;
+/// Mixin for stateful widgets that receive bits.
+mixin BitState<T extends StatefulWidget> on State<T> implements _BitReceiver {
+  String get bitChannel;
 
   @override
-  _onBit(Bit bit) => BitReceiver._onBitBuilder(this)(bit);
+  _onBit(Bit bit) => _BitReceiver._onBitBuilder(this)(bit);
 
   @override
   Map<String, dynamic> _toJson([bool ignoreLogLevel = false]) =>
-      BitReceiver._toJsonBuilder(this)(ignoreLogLevel);
+      _BitReceiver._toJsonBuilder(this)(ignoreLogLevel);
 
   @override
   void initState() {
@@ -182,6 +189,7 @@ mixin BitState<T extends StatefulWidget> on State<T> implements BitReceiver {
     super.dispose();
   }
 
+  /// Rebuilds the widget when a bit of type [B] is received.
   rebuildOn<B>(Bit bit) {
     if (bit is! B) return;
     setState(() {});
@@ -191,8 +199,10 @@ mixin BitState<T extends StatefulWidget> on State<T> implements BitReceiver {
   String get qualifier => "New BitState $runtimeType";
 }
 
-mixin OnBit<B extends Bit> on StatelessWidget implements BitReceiver {
-  get bitChannel;
+/// Mixin for stateless widgets that receive bits.
+mixin OnBit<B extends Bit> on StatelessWidget implements _BitReceiver {
+  /// The channel this widget listens to.
+  String get bitChannel;
 
   @override
   StatelessElement createElement() {
@@ -218,7 +228,7 @@ mixin OnBit<B extends Bit> on StatelessWidget implements BitReceiver {
 
   @override
   Map<String, dynamic> _toJson([bool ignoreLogLevel = false]) =>
-      BitReceiver._toJsonBuilder(this)(ignoreLogLevel);
+      _BitReceiver._toJsonBuilder(this)(ignoreLogLevel);
 
   @override
   get qualifier => "New OnBit $runtimeType";
@@ -232,6 +242,7 @@ mixin OnBit<B extends Bit> on StatelessWidget implements BitReceiver {
 // ██   ██ ██      ██      ██      ██  ██  ██  ██   ██ ██   ██ ██      ██          ██   ██ ██    ██
 // ██   ██ ███████  ██████ ███████ ██   ████   ██   ██ ██████  ███████ ███████     ██████  ██    ██
 
+/// Abstract base class for bits taht can be received.
 abstract base class ReceivableBit with Core {
   ReceivableBit() {
     if (kDebugMode) print(_toJson());
@@ -243,6 +254,7 @@ abstract base class ReceivableBit with Core {
         if (data.isNotEmpty) "data": data,
       };
 
+  /// The data contained in the bit.
   Map<String, dynamic> get data => {};
 
   @override
@@ -255,6 +267,7 @@ abstract base class ReceivableBit with Core {
 // ██      ██    ██ ██   ██ ██
 //  ██████  ██████  ██   ██ ███████
 
+/// Mixin providing core functionality for bits.
 mixin Core {
   final int _id = _idCounter++;
   final DateTime _timestamp = DateTime.timestamp();

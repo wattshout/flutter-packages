@@ -1,5 +1,6 @@
 import 'bit.dart';
 
+/// Represents a log bit.
 final class Log extends ReceivableBit {
   @override
   final String qualifier;
@@ -10,10 +11,12 @@ final class Log extends ReceivableBit {
   Log(this.qualifier, {Map<String, dynamic>? data}) : data = data ?? {};
 }
 
+/// Represents a development log bit.
 final class Dev extends Log {
   Dev(super.qualifier, {super.data});
 }
 
+/// Represents a request bit.
 base class RequestBit extends Bit {
   @override
   final String bitChannel;
@@ -21,6 +24,7 @@ base class RequestBit extends Bit {
   RequestBit({required this.bitChannel});
 }
 
+/// Represents a response bit to a request bit.
 base class ResponseBit extends Bit {
   final RequestBit requestBit;
 
@@ -42,6 +46,7 @@ base class ResponseBit extends Bit {
       };
 }
 
+/// Represents a request failure bit.
 final class RequestFailed extends ResponseBit {
   final dynamic error;
   final StackTrace stackTrace;
