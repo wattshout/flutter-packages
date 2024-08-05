@@ -1,4 +1,4 @@
-import 'package:beat/bit.dart';
+import 'package:beat/beat.dart';
 import 'package:flutter/material.dart';
 
 void main() {
