@@ -1,8 +1,8 @@
-name: bit
+name: beat
 description: Event support package.
 version: 0.0.1
 repository: https://github.com/wattshout/flutter-packages/tree/main/packages/bit
-issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22bit%22
+issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22bit%20package%22
 homepage: https://wattshout.com
 
 environment:

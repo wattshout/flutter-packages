@@ -1,14 +1,20 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'helper_bits.dart';
+
+enum LogLevel {
+  user,
+  info,
+  debug,
+  trace;
+}
+
 // ██████  ██ ████████
 // ██   ██ ██    ██
 // ██████  ██    ██
 // ██   ██ ██    ██
 // ██████  ██    ██
-
-import 'package:bit/src/log_level.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
-import 'helper_bits.dart';
 
 abstract base class Bit extends ReceivableBit {
   Bit() {
