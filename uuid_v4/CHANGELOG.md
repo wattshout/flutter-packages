@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.2
+
+* Improved pubspec.yaml description
+
 ## 1.0.1
 
 * Fixed repository URL

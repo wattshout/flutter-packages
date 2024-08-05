@@ -1,9 +1,6 @@
 name: uuid_v4
-description: >
-  A Dart package for generating and parsing UUID version 4 (RFC4122) strings.
-  UUIDv4 is a 128-bit identifier used to uniquely identify information in 
-  computer systems, generated randomly to ensure uniqueness.
-version: 1.0.1
+description: A Dart package for generating and parsing UUID version 4 (RFC4122) strings.
+version: 1.0.2
 repository: https://github.com/wattshout/flutter-packages/tree/main/uuid_v4
 issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22uuid_v4+package%22
 homepage: https://wattshout.com
