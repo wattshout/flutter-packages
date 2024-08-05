@@ -1,0 +1,32 @@
+name: bit
+description: Event support package.
+version: 0.0.1
+repository: https://github.com/wattshout/flutter-packages/tree/main/packages/bit
+issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22bit%22
+homepage: https://wattshout.com
+
+environment:
+  sdk: ^3.4.0
+  flutter: ">=3.22.3"
+
+flutter:
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+topics:
+  - event
