@@ -1,4 +1,4 @@
-library beat;
+library bitchannel;
 
 export 'src/bit.dart'
     show Bit, BitChannel, BitService, BitState, LogLevel, OnBit;

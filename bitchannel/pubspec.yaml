@@ -1,4 +1,4 @@
-name: beat
+name: bitchannel
 description: Event support package.
 version: 0.0.1
 repository: https://github.com/wattshout/flutter-packages/tree/main/packages/bit
