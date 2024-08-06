@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.2
+
+* Fixed an issue that would lead app to crash when using `BitReceiver` sub-classes (`BitService`, `BitState`, `OnBit`) and `Bit.logLevel` higher than `LogLevel.info`
+
 ## 1.0.1
 
 * Fixed repositroy URL

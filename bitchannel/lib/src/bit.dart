@@ -131,7 +131,10 @@ mixin _BitReceiver implements Core {
         r.bitMap[bit.runtimeType]!(bit);
       };
 
-  static _toJsonBuilder(_BitReceiver r) => ([bool ignoreLogLevel = false]) => {
+  static Map<String, dynamic> Function(
+      [bool]) _toJsonBuilder(_BitReceiver r) => (
+          [bool ignoreLogLevel = false]) =>
+      {
         "qualifier": r.qualifier,
         // LogLevel.info
         if (ignoreLogLevel ||
@@ -156,6 +159,13 @@ mixin _BitReceiver implements Core {
 /// Mixin for services that receive bits.
 mixin BitService implements _BitReceiver {
   @override
+  final int _id = Core._idCounter++;
+  @override
+  final DateTime _timestamp = DateTime.timestamp();
+  @override
+  final StackTrace _stackTrace = StackTrace.current;
+
+  @override
   _onBit(Bit bit) => _BitReceiver._onBitBuilder(this)(bit);
 
   @override
@@ -168,6 +178,13 @@ mixin BitService implements _BitReceiver {
 
 /// Mixin for stateful widgets that receive bits.
 mixin BitState<T extends StatefulWidget> on State<T> implements _BitReceiver {
+  @override
+  final int _id = Core._idCounter++;
+  @override
+  final DateTime _timestamp = DateTime.timestamp();
+  @override
+  final StackTrace _stackTrace = StackTrace.current;
+
   String get bitChannel;
 
   @override
@@ -201,6 +218,13 @@ mixin BitState<T extends StatefulWidget> on State<T> implements _BitReceiver {
 
 /// Mixin for stateless widgets that receive bits.
 mixin OnBit<B extends Bit> on StatelessWidget implements _BitReceiver {
+  @override
+  final int _id = Core._idCounter++;
+  @override
+  final DateTime _timestamp = DateTime.timestamp();
+  @override
+  final StackTrace _stackTrace = StackTrace.current;
+
   /// The channel this widget listens to.
   String get bitChannel;
 

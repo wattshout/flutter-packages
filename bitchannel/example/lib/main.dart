@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> with BitState {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: _debug,
-      home: const MyScaffold(),
+      home: MyScaffold(),
     );
   }
 
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> with BitState {
 }
 
 class MyScaffold extends StatelessWidget with OnBit<TestBit> {
-  const MyScaffold({
+  MyScaffold({
     super.key,
   });
 

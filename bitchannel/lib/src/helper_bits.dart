@@ -22,6 +22,9 @@ base class RequestBit extends Bit {
   final String bitChannel;
 
   RequestBit({required this.bitChannel});
+
+  @override
+  String get qualifier => "New request '$runtimeType'";
 }
 
 /// Represents a response bit to a request bit.
@@ -38,7 +41,7 @@ base class ResponseBit extends Bit {
 
   @override
   String get qualifier =>
-      "New ResponseBit $runtimeType to RequestBit ${requestBit.runtimeType}";
+      "Request '${requestBit.runtimeType}' got response '$runtimeType'";
 
   @override
   Map<String, dynamic> get data => {
@@ -58,6 +61,9 @@ final class RequestFailed extends ResponseBit {
     required super.bitChannel,
   })  : error = e,
         stackTrace = s;
+
+  @override
+  String get qualifier => "Request '${requestBit.runtimeType}' failed: $error";
 
   @override
   get data => {
