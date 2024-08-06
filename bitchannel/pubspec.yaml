@@ -16,7 +16,7 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  uuid_v4:
+  uuid_v4: ^1.0.2
 
 dev_dependencies:
   flutter_test:
