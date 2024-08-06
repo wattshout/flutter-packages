@@ -2,7 +2,7 @@ name: bitchannel
 description: >
   A mix between an event-oriented package and a communication infrastructure 
   package based on channels and bits of information.
-version: 1.0.3
+version: 2.0.0
 repository: https://github.com/wattshout/flutter-packages/tree/main/bitchannel
 issue_tracker: https://github.com/wattshout/flutter-packages/issues?q=is%3Aissue+is%3Aopen+label%3A%22bitchannel%20package%22
 homepage: https://wattshout.com
@@ -16,6 +16,7 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
+  uuid_v4:
 
 dev_dependencies:
   flutter_test:

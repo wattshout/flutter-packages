@@ -1,57 +1,48 @@
 import 'bit.dart';
 
-/// Represents a log bit.
-final class Log extends ReceivableBit {
+/// A bit that logs information.
+final class LogBit extends ReceivableBit {
+  /// Constructs a new [LogBit] with the specified [qualifier] and optional
+  /// [data].
+  LogBit(this.qualifier, {Json? data}) : data = data ?? {};
+
   @override
   final String qualifier;
 
   @override
-  final Map<String, dynamic> data;
-
-  Log(this.qualifier, {Map<String, dynamic>? data}) : data = data ?? {};
+  final Json data;
 }
 
-/// Represents a development log bit.
-final class Dev extends Log {
-  Dev(super.qualifier, {super.data});
-}
-
-/// Represents a request bit.
-base class RequestBit extends Bit {
+/// Abstract base class for request bits.
+abstract base class RequestBit extends Bit {
   @override
-  final String bitChannel;
+  String get qualifier => "New RequestBit '$runtimeType'";
+}
 
-  RequestBit({required this.bitChannel});
+/// Abstract base class for response bits.
+abstract base class ResponseBit extends Bit {
+  /// Constructs a new [ResponseBit] with the specified [requestBit].
+  ResponseBit({required this.requestBit});
 
   @override
-  String get qualifier => "New request '$runtimeType'";
-}
+  String get qualifier => "New ResponseBit '$runtimeType'";
 
-/// Represents a response bit to a request bit.
-base class ResponseBit extends Bit {
+  @override
+  String get bitChannel => requestBit.bitChannel;
+
+  /// The request bit associated with this response.
   final RequestBit requestBit;
-
-  @override
-  final String bitChannel;
-
-  ResponseBit({required this.requestBit}) : bitChannel = requestBit.bitChannel;
-
-  @override
-  String get qualifier =>
-      "New response '$runtimeType' to request '${requestBit.runtimeType}'";
-
-  @override
-  Map<String, dynamic> get data => {...super.data, "request_bit": requestBit};
 }
 
 /// Represents a request failure bit.
 final class RequestFailed extends ResponseBit {
-  final dynamic error;
-  final StackTrace stackTrace;
-
-  RequestFailed(dynamic e, StackTrace s, {required super.requestBit})
-      : error = e,
-        stackTrace = s;
+  /// Constructs a new [RequestFailed] with the specified [requestBit], [error],
+  /// and [stackTrace].
+  RequestFailed({
+    required super.requestBit,
+    required this.error,
+    required this.stackTrace,
+  });
 
   @override
   String get qualifier => "Request '${requestBit.runtimeType}' failed: $error";
@@ -63,4 +54,40 @@ final class RequestFailed extends ResponseBit {
         "error_type": error.runtimeType,
         "stack_trace": stackTrace,
       };
+
+  /// The error that caused the request to fail.
+  final dynamic error;
+
+  /// The stack trace of the error.
+  final StackTrace stackTrace;
+}
+
+/// Represents a successful response without data.
+final class ResponseOK extends ResponseBit {
+  /// Constructs a new [ResponseOK] with the specified [requestBit].
+  ResponseOK({required super.requestBit});
+
+  @override
+  String get qualifier => "Response from '${requestBit.runtimeType}' OK";
+}
+
+/// Represents a response with a value.
+final class ResponseValue<T> extends ResponseBit {
+  /// Constructs a new [ResponseValue] with the specified [requestBit] and [value].
+  ResponseValue({
+    required super.requestBit,
+    required this.value,
+  });
+
+  @override
+  String get qualifier => "Response from '${requestBit.runtimeType}': $value";
+
+  @override
+  Map<String, dynamic> get data => {...super.data, "value": value};
+
+  /// The value of the response.
+  final T value;
+
+  @override
+  String toString() => value.toString();
 }
