@@ -1,12 +1,20 @@
 # CHANGELOG
 
+## 1.0.3
+
+* Fixed small typo in `CHANGELOG.md`
+* Added call to `super.data` in `data` getters for `ResponseBit` and `RequestFailed`
+* Added `Future()` to handler call in `_onBitBuilder` to prevent responses to be triggered before the request itself
+* Removed need to specify bitChannel in `ResponseBit`
+* Some code lifting in `helper_bits.dart`
+
 ## 1.0.2
 
 * Fixed an issue that would lead app to crash when using `BitReceiver` sub-classes (`BitService`, `BitState`, `OnBit`) and `Bit.logLevel` higher than `LogLevel.info`
 
 ## 1.0.1
 
-* Fixed repositroy URL
+* Fixed repository URL
 
 ## 1.0.0
 

@@ -128,7 +128,7 @@ mixin _BitReceiver implements Core {
         if (!r.bitMap.containsKey(bit.runtimeType)) {
           return;
         }
-        r.bitMap[bit.runtimeType]!(bit);
+        Future(() => r.bitMap[bit.runtimeType]!(bit));
       };
 
   static Map<String, dynamic> Function(

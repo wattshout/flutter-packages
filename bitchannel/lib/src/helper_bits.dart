@@ -34,19 +34,14 @@ base class ResponseBit extends Bit {
   @override
   final String bitChannel;
 
-  ResponseBit({
-    required this.requestBit,
-    required this.bitChannel,
-  });
+  ResponseBit({required this.requestBit}) : bitChannel = requestBit.bitChannel;
 
   @override
   String get qualifier =>
-      "Request '${requestBit.runtimeType}' got response '$runtimeType'";
+      "New response '$runtimeType' to request '${requestBit.runtimeType}'";
 
   @override
-  Map<String, dynamic> get data => {
-        "request_bit": requestBit,
-      };
+  Map<String, dynamic> get data => {...super.data, "request_bit": requestBit};
 }
 
 /// Represents a request failure bit.
@@ -54,12 +49,8 @@ final class RequestFailed extends ResponseBit {
   final dynamic error;
   final StackTrace stackTrace;
 
-  RequestFailed(
-    dynamic e,
-    StackTrace s, {
-    required super.requestBit,
-    required super.bitChannel,
-  })  : error = e,
+  RequestFailed(dynamic e, StackTrace s, {required super.requestBit})
+      : error = e,
         stackTrace = s;
 
   @override
@@ -67,6 +58,7 @@ final class RequestFailed extends ResponseBit {
 
   @override
   get data => {
+        ...super.data,
         "error": error,
         "error_type": error.runtimeType,
         "stack_trace": stackTrace,
